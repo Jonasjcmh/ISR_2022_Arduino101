@@ -34,6 +34,7 @@ float pressure_f=0;
 float pressure_a=0;
 float alpha=0.2;
 
+
 void setup()
 {
   //Motor control shield  
@@ -46,7 +47,9 @@ void setup()
     
     Serial.begin(115200);             // Starting Serial communication with computer baudrate 115200 bps
 
-Serial.print("Process_Status");    // pressure data in kpa
+//Print legend of parameters of the system
+
+    Serial.print("Process_Status");    // pressure data in kpa
     Serial.print(",");
     Serial.print("Pressure_sensor_Value");    // pressure data in kpa
     Serial.print(",");
@@ -56,51 +59,45 @@ Serial.print("Process_Status");    // pressure data in kpa
 
 void loop()
 {
+timecounter++;
 int motorspeed=100;      
 float Setpoint=20;
 
-// sensing pressure status
+// filtering sensing pressure status
 float  pressure_sensorValue = (analogRead(PRESSURE_SENSOR)*SensorGain-SensorOffset); //Do maths for calibration
-
-
-timecounter++;
+pressure=pressure_sensorValue;
+pressure_f=pressure_f+alpha*(pressure-pressure_a);
+pressure_a=pressure_f;
 
 //Controlling the time of the process
-if (timecounter <= 30)     // 3 seconds == 30 * 100 ms
+if (lock == false )     // Inflation process until reach 20 kPa
 {
   // Introducion air to the PneuNets
      motor_1_on(250);
      valve_1_off();
-     stateprocess=1;   
-
-     
+     stateprocess=1;     
   }
- else if ( timecounter > 30 and timecounter<= 60 )
+ if ( pressure_f >= 22 )
  {
-  motor_1_off();
+  lock=true;
   valve_1_off();
+  motor_1_off();
   stateprocess=2;
-
   }
-  else if ( timecounter > 60 and timecounter<= 90)
+  if ( timecounter > 70 and timecounter <= 120 )
   {
   motor_1_off();
   valve_1_on();
   stateprocess=3;
-
     }
-  else if ( timecounter > 90)
+  if ( timecounter >= 120)
   {
     timecounter=0;
+    lock=false;
     stateprocess=4;
+    valve_1_on();
     }
 
-  
-    //Print parameters of the system
-
-
-    Serial.print(pressure_sensorValue);    // pressure data in kpa
-    Serial.print(",");
 
     //Print parameters of the system
 
@@ -110,8 +107,11 @@ if (timecounter <= 30)     // 3 seconds == 30 * 100 ms
     Serial.print(",");
     Serial.print(pressure_f);    // pressure data in kpa
     Serial.println(",");
+
     
     delay(100);   // defining sample time = 100 miliseconds
+
+   
     
 }
 

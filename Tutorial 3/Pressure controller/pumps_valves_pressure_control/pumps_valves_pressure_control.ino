@@ -84,13 +84,13 @@ if (lock == false )     // Inflation process until reach 20 kPa
   motor_1_off();
   stateprocess=2;
   }
-  else if ( timecounter > 70 and timecounter <= 120 )
+  if ( timecounter > 70 and timecounter <= 120 )
   {
   motor_1_off();
   valve_1_off();
   stateprocess=3;
     }
-  else if ( timecounter >= 120)
+  if ( timecounter >= 120)
   {
     timecounter=0;
     lock=false;
