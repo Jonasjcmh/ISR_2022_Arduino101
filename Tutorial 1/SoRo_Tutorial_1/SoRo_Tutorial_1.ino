@@ -66,7 +66,7 @@ void ads_data_callback(float * sample, uint8_t sample_type)
 //Pressure sensor calibration factors  MPX5100 Series Integrated Silicon Pressure Sensor analog input (0 to 100 kPa)  Vout=Vs(P * 0.009 + 0.04),  Vs=5V = 1024,  P = 
  
 const float SensorOffset = 4.44;  //pressure sensor offset
-const float SensorGain = 0.109;   // pressure sensor proportional relation
+const float SensorGain = 113.77;   // pressure sensor proportional relation 0.109
 
 //Resistor sensor calibration factors  
 const float SensorOffset2 = 330;  //resistance offset
@@ -149,7 +149,8 @@ void loop() {
     Serial.print(",");
     Serial.print(pressure_sensorValue);    // pressure data in kpa
     Serial.print(",");
-    Serial.println(resistance_sensorValue);  // Stretch data
+    Serial.println(0);
+    //Serial.println(resistance_sensorValue);  // Stretch data
     
   
   // Check for received hot keys on the com port

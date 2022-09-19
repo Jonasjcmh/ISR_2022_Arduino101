@@ -42,6 +42,10 @@ void setup() {
   previousAngle = 0;
    milliSeconds = millis();
   previousMilliSeconds = milliSeconds;
+
+  Serial.print("Signal_1");
+  Serial.print(',');
+  Serial.println("Signal_2");
   
 }
 
@@ -55,7 +59,7 @@ void loop() {
   previousAngle = angle;
   
 
-  Serial.print(sin(angle));
+  Serial.print(3*sin(4*angle));
   Serial.print(',');
   Serial.println(2*sin(2*angle));
   delay(10);
